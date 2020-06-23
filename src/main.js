@@ -1,5 +1,5 @@
 
-canvas.onclick=(e)=>{
+canvas.onmousemove=(e)=>{
   console.log(e)
   console.log(e.clientX)
   console.log(e.clientY)

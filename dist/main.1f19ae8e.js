@@ -118,7 +118,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"main.js":[function(require,module,exports) {
-canvas.onclick = function (e) {
+canvas.onmousemove = function (e) {
   console.log(e);
   console.log(e.clientX);
   console.log(e.clientY);
