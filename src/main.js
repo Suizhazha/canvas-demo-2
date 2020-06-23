@@ -17,21 +17,35 @@ canvas.onmousedown=()=>{
   padding=true
 }
 
-
-canvas.onmousemove=(e)=>{
-  if (padding){
-    ctx.beginPath();
-    ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fill()
-    ctx.fillStyle="black"
-    ctx.strokeStyle='none'
-  }else {
-    console.log('什么都不做');
+//检测移动端触屏事件
+let isTouchDevice = 'ontouchstart' in document.documentElement
+if (isTouchDevice){
+canvas.ontouchmove =(e)=>{
+  //多个手指触屏
+  let x=e.touches[0].clientX
+  let y=e.touches[0].clientY
+  ctx.beginPath();
+  ctx.arc(x, y, 10, 0, 2 * Math.PI);
+  ctx.stroke();
+  ctx.fill()
+  ctx.fillStyle = "black"
+  ctx.strokeStyle = 'none'
+}
+}else {
+  canvas.onmousemove = (e) => {
+    if (padding) {
+      ctx.beginPath();
+      ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.fill()
+      ctx.fillStyle = "black"
+      ctx.strokeStyle = 'none'
+    } else {
+      console.log('什么都不做');
+    }
+  }
+  canvas.onmouseup = () => {
+    padding = false
   }
 }
-canvas.onmouseup=()=>{
-  padding=false
-}
-
 

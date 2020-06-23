@@ -131,24 +131,41 @@ var padding = false;
 
 canvas.onmousedown = function () {
   padding = true;
-};
+}; //检测移动端触屏事件
 
-canvas.onmousemove = function (e) {
-  if (padding) {
+
+var isTouchDevice = 'ontouchstart' in document.documentElement;
+
+if (isTouchDevice) {
+  canvas.ontouchmove = function (e) {
+    //多个手指触屏
+    var x = e.touches[0].clientX;
+    var y = e.touches[0].clientY;
     ctx.beginPath();
-    ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+    ctx.arc(x, y, 10, 0, 2 * Math.PI);
     ctx.stroke();
     ctx.fill();
     ctx.fillStyle = "black";
     ctx.strokeStyle = 'none';
-  } else {
-    console.log('什么都不做');
-  }
-};
+  };
+} else {
+  canvas.onmousemove = function (e) {
+    if (padding) {
+      ctx.beginPath();
+      ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.fill();
+      ctx.fillStyle = "black";
+      ctx.strokeStyle = 'none';
+    } else {
+      console.log('什么都不做');
+    }
+  };
 
-canvas.onmouseup = function () {
-  padding = false;
-};
+  canvas.onmouseup = function () {
+    padding = false;
+  };
+}
 },{}],"../../../../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
