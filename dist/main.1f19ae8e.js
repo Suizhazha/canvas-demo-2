@@ -120,45 +120,56 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"main.js":[function(require,module,exports) {
 var canvas = document.getElementById('canvas'); //js获取屏幕宽高
 
-var documentHeight = document.documentElement.clientHeight;
-var documentWidth = document.documentElement.clientWidth;
-canvas.width = documentWidth;
-canvas.height = documentHeight; //画线
-
+canvas.height = document.documentElement.clientHeight;
+canvas.width = document.documentElement.clientWidth;
 var ctx = canvas.getContext('2d'); //默认不画，鼠标按下时开始画
 
 var padding = false;
+ctx.fillStyle = "black";
+ctx.strokeStyle = 'none';
+ctx.lineCap = 'round';
+ctx.lineWidth = 10;
 
 canvas.onmousedown = function () {
   padding = true;
-}; //检测移动端触屏事件
+}; //画线
 
 
+function drawLine(x1, y1, x2, y2) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+} //检测移动端触屏事件
+
+
+var last;
 var isTouchDevice = 'ontouchstart' in document.documentElement;
 
 if (isTouchDevice) {
-  canvas.ontouchmove = function (e) {
+  canvas.ontouchstart = function (e) {
     //多个手指触屏
     var x = e.touches[0].clientX;
     var y = e.touches[0].clientY;
-    ctx.beginPath();
-    ctx.arc(x, y, 10, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.fill();
-    ctx.fillStyle = "black";
-    ctx.strokeStyle = 'none';
+    last = [x, y];
+  };
+
+  canvas.ontouchmove = function (e) {
+    var x = e.touches[0].clientX;
+    var y = e.touches[0].clientY;
+    drawLine(last[0], last[1], x, y);
+    last = [x, y];
   };
 } else {
+  canvas.onmousedown = function (e) {
+    padding = true;
+    last = [e.clientX, e.clientY]; //记录鼠标上一次位置
+  };
+
   canvas.onmousemove = function (e) {
     if (padding) {
-      ctx.beginPath();
-      ctx.arc(e.clientX, e.clientY, 10, 0, 2 * Math.PI);
-      ctx.stroke();
-      ctx.fill();
-      ctx.fillStyle = "black";
-      ctx.strokeStyle = 'none';
-    } else {
-      console.log('什么都不做');
+      drawLine(last[0], last[1], e.clientX, e.clientY);
+      last = [e.clientX, e.clientY];
     }
   };
 
